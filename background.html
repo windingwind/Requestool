@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Requestool workpage</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+	<div style="padding: 50px 0 0 0;display: flex;flex-direction: column;align-content: center;justify-content: center;text-align:center;align-items: center;">
+		<h2>Requestool workpage</h2>
+		<button type="button" class="btn btn-primary" id="send_request">开始发送</button>
+		<div id="data_box">暂无数据</div>
+		<div id="choosen"></div>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+					<th>#</th>
+					<th>requestUrl</th>
+					<th>method</th>
+					<th>responseStatus</th>
+					<th>successCount</th>
+					<th>failCount</th>
+					<th>repeat</th>
+					<th>timeInterval</th>
+					<th>successCheck(optinal)</th>
+					<th>failCheck(optinal)</th>
+					<th>delete</th>
+					</tr>
+				</thead>
+				<tbody id="table_body"></tbody>
+			</table>
+		</div>
+		<div id="card_container" style="width: 80%; height: 300px; overflow-y: scroll;">
+				<div class="card">
+						<div class="card-body" id="card">
+							<p>respond:</p>
+						</div>
+				</div>
+		</div>
+		<div>Tips: successCheck与failCheck接受一个JSON字符串用于检查请求回调；分别会在请求成功与失败回调函数的最后触发检查。任一键值对匹配则结束该条请求（不论是否完成）。例：请求成功返回值为{"msg":"现在不是选课时间！","flag":"0"}，则在successCheck中输入{"flag":"0"}即会匹配成功。</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/background.js"></script>
+</body>
+</html>
