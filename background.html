@@ -9,8 +9,8 @@
 <body>
 	<div style="padding: 50px 0 0 0;display: flex;flex-direction: column;align-content: center;justify-content: center;text-align:center;align-items: center;">
 		<h2>Requestool workpage</h2>
-		<button type="button" class="btn btn-primary" id="send_request">开始发送</button>
-		<div id="data_box">暂无数据</div>
+		<button type="button" class="btn btn-primary" id="send_request">bedin send</button>
+		<div id="data_box">no data</div>
 		<div id="choosen"></div>
 		<div class="table-responsive">
 			<table class="table">
@@ -32,14 +32,18 @@
 				<tbody id="table_body"></tbody>
 			</table>
 		</div>
-		<div id="card_container" style="width: 80%; height: 300px; overflow-y: scroll;">
+		<div id="card_container" style="width: 80%";>
 				<div class="card">
-						<div class="card-body" id="card">
-							<p>respond:</p>
+						<div class="card-body" id="card"  style="width: 100%; height: 300px; overflow-y: scroll;text-align: left;">
+							<h6>console</h6>
 						</div>
 				</div>
 		</div>
-		<div>Tips: successCheck与failCheck接受一个JSON字符串用于检查请求回调；分别会在请求成功与失败回调函数的最后触发检查。任一键值对匹配则结束该条请求（不论是否完成）。例：请求成功返回值为{"msg":"现在不是选课时间！","flag":"0"}，则在successCheck中输入{"flag":"0"}即会匹配成功。</div>
+		<div>
+			<a href="https://github.com/windingwind/Requestool">How TO USE?</a>
+			nowaku@2019 
+			<a href="https://github.com/windingwind/Requestool">github</a>
+		</div>
 	</div>
 	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>

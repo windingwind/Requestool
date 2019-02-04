@@ -5,7 +5,7 @@ let controlTimer = {};
 
 //-------------------- 右键菜单 ------------------------//
 chrome.contextMenus.create({
-	title: "打开Requestool工作页面",
+	title: "open Requestool's workpage",
 	onclick: function(){
 		window.open(chrome.extension.getURL('background.html'));
 	}
@@ -46,7 +46,7 @@ messageListener = function(request, sender, sendResponse)
 	$(`#${requestCount}_successcheck`).prop('value', request.successCheck);
 	$(`#${requestCount}_failcheck`).prop('value', request.failCheck);
 	requestCount += 1;
-	$('#data_box').text('已加载请求'+requestCount+'条');
+	$('#data_box').text(`Load ${requestCount} requests`);
 	sendResponse('success');
 	console.log(requestList);
 }
@@ -60,7 +60,7 @@ stopRequest = function(e) {
 	$('button').removeAttr('disabled');
 	status = false;
 	chrome.runtime.onMessage.addListener(messageListener);
-	$('#send_request').text('开始发送');
+	$('#send_request').text('begin send');
 	clearInterval(controlTimer);
 	alert(e);
 }
@@ -69,12 +69,12 @@ stopRequest = function(e) {
 $('#send_request').click(()=>{
 	console.log(status, requestList);
 	status = !status;
-	$('#send_request').text(status?'停止发送':'开始发送');
+	$('#send_request').text(status?'stop send':'bedin send');
 	if(status){
 		chrome.runtime.onMessage.removeListener(messageListener);
-		alert(`即将开始发送请求${requestCount}条。`);
+		alert(`${requestCount} tasks are about to begin`);
 		$('input').attr('disabled', 'disabled');
-		$('button').attr('disabled', 'disabled');
+		// $('button').attr('disabled', 'disabled');
 		controlTimer = setInterval(
 			function() {
 				let flag = false;
@@ -111,7 +111,7 @@ $('#send_request').click(()=>{
 								if (!tmp) tmp = 'The request has no respond data available.';
 								tmp = tmp.length>=150?tmp.substring(0,150)+'...':tmp;
 								$(`#card`).append(
-									`<br><p style="color: green;">------respondData${index}------</p><br><p>${tmp}</p>`
+									`<br><p style="color: green;">------respondData of task ${index}------</p><br><p>${tmp}</p>`
 								);
 								requestList[index].successCount+=1;
 								$(`#${index}_success`).text(requestList[index].successCount);
@@ -125,13 +125,13 @@ $('#send_request').click(()=>{
 											if (data.hasOwnProperty(key)&&customCheck.hasOwnProperty(key)) {
 												if(data[key]===customCheck[key]){
 													clearInterval(requestList[index].timer);
-													stopRequest('stopped by custom success check:' + key);
+													stopRequest(`stopped by custom success check: ${key}`);
 												}
 											}
 										}
 									} catch (error) {
 										clearInterval(requestList[index].timer);
-										stopRequest("cunstom success check error:" + error);
+										stopRequest(`custom success check error: ${error}`);
 									}
 								}
 							},
@@ -141,7 +141,7 @@ $('#send_request').click(()=>{
 								if (!tmp) tmp = 'The request has no respond data available.';
 								tmp = tmp.length>=150?tmp.substring(0,150)+'...':tmp;
 								$(`#card`).append(
-									`<br><p style="color: red;">------respondData${index}------</p><br><p>${tmp}</p>`
+									`<br><p style="color: red;">------respondData of task ${index}------</p><br><p>${tmp}</p>`
 								);
 								requestList[index].failCount+=1;
 								$(`#${index}_fail`).text(requestList[index].failCount);
@@ -154,13 +154,13 @@ $('#send_request').click(()=>{
 											if (data.hasOwnProperty(key)&&customCheck.hasOwnProperty(key)) {
 												if(data[key]===customCheck[key]){
 													clearInterval(requestList[index].timer);
-													stopRequest('stopped by custom fail check:' + key);
+													stopRequest(`stopped by custom fail check: ${key}`);
 												}
 											}
 										}
 									} catch (error) {
 										clearInterval(requestList[index].timer);
-										stopRequest("cunstom fail check error:" + error);
+										stopRequest(`custom success check error: ${error}`);
 									}
 								}
 							},
@@ -187,7 +187,7 @@ $('body').on('click', 'td button', (e)=>{
 	requestList.splice(index, 1);
 	requestCount -= 1;
 	$(`#${index}_table`).remove();
-	$(`#data_box`).text(`已加载请求${requestCount}条`)
+	$('#data_box').text(`Load ${requestCount} requests`);
 });
 
 // 输入框事件
@@ -214,4 +214,12 @@ $('body').on('input', 'td input', (e)=>{
 		default: break;
 	}
 	
+});
+
+$('#open_background').click(e => {
+	window.open(chrome.extension.getURL('background.html'));
+})
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
 });

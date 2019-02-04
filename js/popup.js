@@ -10,3 +10,7 @@ $(function() {
 $('#open_background').click(e => {
 	window.open(chrome.extension.getURL('background.html'));
 });
+
+$('#open_github').click(e => {
+	window.open('https://github.com/windingwind/Requestool');
+})
