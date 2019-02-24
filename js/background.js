@@ -55,14 +55,17 @@ messageListener = function(request, sender, sendResponse)
 chrome.runtime.onMessage.addListener(messageListener);
 
 // 停止发送状态
-stopRequest = function(e) {
+stopRequest = function(e, index) {
 	$('input').removeAttr('disabled');
 	$('button').removeAttr('disabled');
 	status = false;
 	chrome.runtime.onMessage.addListener(messageListener);
 	$('#send_request').text('begin send');
+	$(`#card`).append(
+		`<br><p style="color: blue;">------task ${index}: ${e}------</p>`
+	);
 	clearInterval(controlTimer);
-	alert(e);
+	// alert(e);
 }
 
 // 发送请求处理
@@ -72,7 +75,9 @@ $('#send_request').click(()=>{
 	$('#send_request').text(status?'stop send':'bedin send');
 	if(status){
 		chrome.runtime.onMessage.removeListener(messageListener);
-		alert(`${requestCount} tasks are about to begin`);
+		$(`#card`).append(
+			`<br><p style="color: blue;">------${requestCount} tasks are about to begin------</p>`
+		);
 		$('input').attr('disabled', 'disabled');
 		// $('button').attr('disabled', 'disabled');
 		controlTimer = setInterval(
@@ -84,7 +89,7 @@ $('#send_request').click(()=>{
 					}
 				});
 				if(!flag) {
-					stopRequest('finish');
+					stopRequest('finish', 'all');
 				}
 			},500
 		);
@@ -111,7 +116,7 @@ $('#send_request').click(()=>{
 								if (!tmp) tmp = 'The request has no respond data available.';
 								tmp = tmp.length>=150?tmp.substring(0,150)+'...':tmp;
 								$(`#card`).append(
-									`<br><p style="color: green;">------respondData of task ${index}------</p><br><p>${tmp}</p>`
+									`<br><p style="color: green;">------respondData of task ${index}------</p><p>${tmp}</p>`
 								);
 								requestList[index].successCount+=1;
 								$(`#${index}_success`).text(requestList[index].successCount);
@@ -125,13 +130,13 @@ $('#send_request').click(()=>{
 											if (data.hasOwnProperty(key)&&customCheck.hasOwnProperty(key)) {
 												if(data[key]===customCheck[key]){
 													clearInterval(requestList[index].timer);
-													stopRequest(`stopped by custom success check: ${key}`);
+													stopRequest(`stopped by custom success check: ${key}`, index);
 												}
 											}
 										}
 									} catch (error) {
 										clearInterval(requestList[index].timer);
-										stopRequest(`custom success check error: ${error}`);
+										stopRequest(`custom success check error: ${error}`, index);
 									}
 								}
 							},
@@ -141,7 +146,7 @@ $('#send_request').click(()=>{
 								if (!tmp) tmp = 'The request has no respond data available.';
 								tmp = tmp.length>=150?tmp.substring(0,150)+'...':tmp;
 								$(`#card`).append(
-									`<br><p style="color: red;">------respondData of task ${index}------</p><br><p>${tmp}</p>`
+									`<br><p style="color: red;">------respondData of task ${index}------</p><p>${tmp}</p>`
 								);
 								requestList[index].failCount+=1;
 								$(`#${index}_fail`).text(requestList[index].failCount);
@@ -154,13 +159,13 @@ $('#send_request').click(()=>{
 											if (data.hasOwnProperty(key)&&customCheck.hasOwnProperty(key)) {
 												if(data[key]===customCheck[key]){
 													clearInterval(requestList[index].timer);
-													stopRequest(`stopped by custom fail check: ${key}`);
+													stopRequest(`stopped by custom fail check: ${key}`, index);
 												}
 											}
 										}
 									} catch (error) {
 										clearInterval(requestList[index].timer);
-										stopRequest(`custom success check error: ${error}`);
+										stopRequest(`custom success check error: ${error}`, index);
 									}
 								}
 							},
@@ -176,7 +181,7 @@ $('#send_request').click(()=>{
 		})
 	}
 	else {
-		stopRequest('over');
+		stopRequest('over', index);
 	}
 });
 
@@ -215,6 +220,10 @@ $('body').on('input', 'td input', (e)=>{
 	}
 	
 });
+
+$('#clear_console').click(e => {
+	$(`#card`).text('');
+})
 
 $('#open_background').click(e => {
 	window.open(chrome.extension.getURL('background.html'));
