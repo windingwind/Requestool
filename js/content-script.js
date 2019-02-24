@@ -1,13 +1,8 @@
-﻿console.log('RequestTool content script is working.');
-
-$(function showAllButtons()
+﻿$(function showAllButtons()
 {
 	$(".an").css("visibility", "visible");
-	// alert('RequestTool: Click extension button for usage.');
-	// chrome.notifications.create(null, {
-	// 	type: 'basic',
-	// 	iconUrl: 'img/icon.png',
-	// 	title: 'RequestTool Loaded.',
-	// 	message: 'Click extension button for usage.',
-	// });
+	$('body').on('mouseenter', '.body_tr', (e)=> {
+		$(".an").css("visibility", "visible");
+		console.warn('RequestTool content script is working.');
+	})
 });
