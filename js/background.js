@@ -61,9 +61,11 @@ stopRequest = function(e, index) {
 	status = false;
 	chrome.runtime.onMessage.addListener(messageListener);
 	$('#send_request').text('begin send');
-	$(`#card`).append(
+	let offset = $(`#card`).append(
 		`<br><p style="color: blue;">------task ${index}: ${e}------</p>`
-	);
+	).offset();
+	$("#card").stop();
+	$("#card").animate({scrollTop:offset.top},200);
 	clearInterval(controlTimer);
 	// alert(e);
 }
@@ -115,9 +117,11 @@ $('#send_request').click(()=>{
 								let tmp = JSON.stringify(data);
 								if (!tmp) tmp = 'The request has no respond data available.';
 								tmp = tmp.length>=150?tmp.substring(0,150)+'...':tmp;
-								$(`#card`).append(
+								let offset = $(`#card`).append(
 									`<br><p style="color: green;">------respondData of task ${index}------</p><p>${tmp}</p>`
-								);
+								).offset();
+								$("#card").stop();
+								$("#card").animate({scrollTop:offset.top},200);
 								requestList[index].successCount+=1;
 								$(`#${index}_success`).text(requestList[index].successCount);
 								console.log(data)
@@ -145,9 +149,11 @@ $('#send_request').click(()=>{
 								let tmp = JSON.stringify(data);
 								if (!tmp) tmp = 'The request has no respond data available.';
 								tmp = tmp.length>=150?tmp.substring(0,150)+'...':tmp;
-								$(`#card`).append(
+								let offset = $(`#card`).append(
 									`<br><p style="color: red;">------respondData of task ${index}------</p><p>${tmp}</p>`
-								);
+								).offset();
+								$("#card").stop();
+								$("#card").animate({scrollTop:offset.top},200);
 								requestList[index].failCount+=1;
 								$(`#${index}_fail`).text(requestList[index].failCount);
 								// 执行自定义脚本
@@ -172,7 +178,7 @@ $('#send_request').click(()=>{
 						}
 					);
 					requestList[index].sendCount+=1;
-					if(requestList[index].sendCount>=requestList[index].repeatTimes){
+					if(!status || requestList[index].sendCount>=requestList[index].repeatTimes){
 						clearInterval(requestList[index].timer);
 						requestList[index].sendFlag = false;
 					}
@@ -181,7 +187,7 @@ $('#send_request').click(()=>{
 		})
 	}
 	else {
-		stopRequest('over', index);
+		stopRequest('stopped by user', 'all');
 	}
 });
 
