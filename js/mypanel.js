@@ -26,7 +26,7 @@ requestListener = function(request){
 	$('#table_body').append(tmp);
 }
 
-// 监听
+// 监听请求
 $('#listen_request').click(()=>{
 	status = !status;
 	$('#listen_request').text(status?'stop listen':'begin listen');
@@ -34,7 +34,8 @@ $('#listen_request').click(()=>{
 		chrome.devtools.network.onRequestFinished.addListener(requestListener);
 	}
 	else {
-		chrome.devtools.network.onRequestFinished.removeListener(requestListener);
+		chrome.devtools.network
+		.onRequestFinished.removeListener(requestListener);
 	}
 });
 
