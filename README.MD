@@ -15,7 +15,7 @@ v 1.0.1
 5. Now turn to the list of requests in `RequestTool` tab. Select your target REQUEST, which is usually a POST.
 6. Switch to workpage opened before. Now you can see the caught REQUEST in list.
    > Adjust _repeat_ and _timeInterval_ for every REQUEST;  
-   > - Use _successCheck(optinal)_ & _failCheck(optinal)_ to decide when one task should be stopped.  
+   > - Use _successCheck(optional)_ & _failCheck(optional)_ to decide when one task should be stopped.  
    > for example:  
    > you have a request responses like this: 
    > ``` json
