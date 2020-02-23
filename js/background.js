@@ -2,6 +2,7 @@ let requestList = [];
 let requestCount = 0;
 let status = false;
 let controlTimer = {};
+let resList = [];
 
 //-------------------- 右键菜单 ------------------------//
 chrome.contextMenus.create({
@@ -53,12 +54,12 @@ messageListener = function (request, sender, sendResponse) {
 	$(`#card`).append(
 		`
 		<div style="color: yellow;">------add new task ${requestCount}------</div>
-		<div style="color: white;">${JSON.stringify(request)}</div>
 		`
 	);
 	scrollConsole();
 	requestCount += 1;
 	$('#data_box').text(`Load ${requestCount} requests`);
+	resList.push([]);
 	sendResponse('success');
 	console.log(requestList);
 }
@@ -74,15 +75,16 @@ stopRequest = function (e, index) {
 		status = false;
 		chrome.runtime.onMessage.addListener(messageListener);
 		$('#send_request').text('start Request');
+		$('#send_request').attr("class", 'btn btn-success');
 		$(`#card`).append(
-			`<br><p style="color: red;">------all tasks stopped because of: ${e}------</p>`
+			`<br><p style="color: red;">------all tasks are stopped because of: ${e}------</p>`
 		);
 		scrollConsole();
 		clearInterval(controlTimer);
 	} else {
 		requestList[index].sendFlag = false;
 		$(`#card`).append(
-			`<br><p style="color: red;">------task${index} stopped because of: ${e}------</p>`
+			`<br><p style="color: red;">------task${index} is stopped because of: ${e}------</p>`
 		);
 		scrollConsole();
 	}
@@ -93,6 +95,7 @@ $('#send_request').click(() => {
 	console.log(status, requestList);
 	status = !status;
 	$('#send_request').text(status ? 'stop Request' : 'start Request');
+	$('#send_request').attr("class", status ?'btn btn-danger':'btn btn-success');
 	if (status) {
 		chrome.runtime.onMessage.removeListener(messageListener);
 		$(`#card`).append(
@@ -149,10 +152,30 @@ $('#send_request').click(() => {
 								let tmp = JSON.stringify(data);
 								if (!tmp) tmp = 'No respond data available.';
 								tmp = tmp.length >= 150 ? tmp.substring(0, 150) + '...' : tmp;
-								// $(`#card`).append(
-								// 	`<br><p style="color: green;">------respondData of task ${index}------</p><p>${tmp}</p>`
-								// );
-								// scrollConsole();
+								let infoFlag = -1;
+								let i=-1;
+								for (i =0;i <resList[index].length;i++) {
+									if(resList[index][i].info===tmp){
+										resList[index][i].count++;
+										infoFlag = i;
+										$(`#${index}_${i}`).text(
+											`${resList[index][i].count}`
+										);
+										// console.log($(`#${index}_${i}`))
+										break;
+									}
+								}
+								if(infoFlag==-1){
+									resList[index].push({
+										info: tmp,
+										count: 1,
+									})
+									$(`#card`).append(
+										`<br><p style="color: green;">------respondData of task ${index}------</p><p>${tmp}</p><span style="color: red; background: white" id="${index}_${i}">1</span>`
+									);
+									
+								}
+								scrollConsole();
 								// $("#card").stop();
 								// $("#card").animate({scrollTop:offset.top},200);
 								requestList[index].successCount += 1;
